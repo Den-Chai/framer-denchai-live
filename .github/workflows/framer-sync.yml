@@ -1,0 +1,12 @@
+name: Sync to Framer
+on:
+  push:
+    branches:
+      - main
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Framer Pull
+        run: |
+          curl -X POST ${{ secrets.FRAMER_WEBHOOK_URL }}
