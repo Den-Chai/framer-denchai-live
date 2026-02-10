@@ -4,6 +4,77 @@ import { addPropertyControls, ControlType, RenderTarget } from "framer"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 
 // ═══════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface MenuItem {
+    name: string
+    price: string
+    category: string
+    description: string
+}
+
+interface Category {
+    id: string
+    label: string
+    bg: string | null
+    filled: boolean
+}
+
+interface HeroSectionProps {
+    logo?: string
+    logoScale: number
+    showHeroText: boolean
+    logoSpacingTop: number
+    logoSpacingBottom: number
+    heroTitleSize: number
+    heroSubtitleSize: number
+    fontFamily: string
+    isCanvas: boolean
+}
+
+interface NavigationBarProps {
+    activeSection: string
+    onCategoryClick: (categoryId: string) => void
+    isCanvas: boolean
+}
+
+interface MenuSectionProps {
+    category: Category
+    menuItems: MenuItem[]
+    onItemClick: (item: MenuItem) => void
+    fontFamily: string
+    isCanvas: boolean
+    onSectionInView: (categoryId: string) => void
+    sectionHeaderSize: number
+    itemTitleSize: number
+    itemDescSize: number
+    boxPadding: number
+}
+
+interface ItemModalProps {
+    item: MenuItem | null
+    onClose: () => void
+    isCanvas: boolean
+}
+
+interface DenChaiMenuProps {
+    logo?: string
+    logoScale?: number
+    showHeroText?: boolean
+    logoSpacingTop?: number
+    logoSpacingBottom?: number
+    font?: { fontFamily: string }
+    heroTitleSize?: number
+    heroSubtitleSize?: number
+    sectionHeaderSize?: number
+    itemTitleSize?: number
+    itemDescSize?: number
+    contentWidth?: number
+    boxPadding?: number
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -17,7 +88,7 @@ const colors = {
     cream: "#FFF8F0",
 }
 
-const CATEGORIES = [
+const CATEGORIES: Category[] = [
     {
         id: "appetizers",
         label: "Appetizers",
@@ -44,7 +115,7 @@ const CATEGORIES = [
     { id: "beverages", label: "Beverages", bg: null, filled: false },
 ]
 
-const MOCK_ITEMS = [
+const MOCK_ITEMS: MenuItem[] = [
     {
         name: "Spring Rolls",
         price: "8",
@@ -111,7 +182,7 @@ const MOCK_ITEMS = [
 // HERO SECTION COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-const HeroSection = ({
+const HeroSection: React.FC<HeroSectionProps> = ({
     logo,
     logoScale,
     showHeroText,
@@ -206,17 +277,21 @@ const HeroSection = ({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// NAVIGATION BAR COMPONENT
+// NAVIGATION BAR COMPONENT - MOBILE FRIENDLY VERSION
 // ═══════════════════════════════════════════════════════════════════════════
 
-const NavigationBar = ({ activeSection, onCategoryClick, isCanvas }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({
+    activeSection,
+    onCategoryClick,
+    isCanvas,
+}) => {
     const styles = {
         nav: {
             position: "sticky" as const,
             top: 0,
             zIndex: 100,
             backgroundColor: colors.chocolate,
-            padding: "20px 0",
+            padding: "30px 0",
             boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
         },
         navInner: {
@@ -224,10 +299,10 @@ const NavigationBar = ({ activeSection, onCategoryClick, isCanvas }) => {
             margin: "0 auto",
             padding: "0 20px",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
             flexWrap: "wrap" as const,
-            gap: "10px",
+            gap: "16px",
         },
     }
 
@@ -253,11 +328,13 @@ const NavigationBar = ({ activeSection, onCategoryClick, isCanvas }) => {
                                 color: isActive
                                     ? colors.white
                                     : "rgba(255,255,255,0.7)",
-                                fontSize: "14px",
+                                fontSize: "18px",
                                 fontWeight: "600",
                                 cursor: "pointer",
-                                padding: "8px 16px",
-                                borderRadius: "6px",
+                                padding: "14px 24px",
+                                minHeight: "48px",
+                                minWidth: "fit-content",
+                                borderRadius: "8px",
                                 transition: "all 0.2s",
                                 fontFamily: "sans-serif",
                                 textTransform: "uppercase" as const,
@@ -278,7 +355,7 @@ const NavigationBar = ({ activeSection, onCategoryClick, isCanvas }) => {
 // MENU SECTION COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-const MenuSection = React.memo(
+const MenuSection: React.FC<MenuSectionProps> = React.memo(
     ({
         category,
         menuItems,
@@ -318,10 +395,10 @@ const MenuSection = React.memo(
         const styles = {
             section: {
                 marginBottom: "60px",
-                scrollMarginTop: "100px",
+                scrollMarginTop: "120px",
             },
             sectionFilled: {
-                backgroundColor: category.bg,
+                backgroundColor: category.bg || colors.terracotta,
                 padding: `${boxPadding}px 30px`,
                 borderRadius: "12px",
                 boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
@@ -455,7 +532,7 @@ MenuSection.displayName = "MenuSection"
 // ITEM MODAL COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-const ItemModal = ({ item, onClose, isCanvas }) => {
+const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
     if (!item || isCanvas) return null
 
     const styles = {
@@ -557,11 +634,11 @@ const ItemModal = ({ item, onClose, isCanvas }) => {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export default function DenChaiMenu(props) {
-    const [menuItems, setMenuItems] = useState([])
+export default function DenChaiMenu(props: DenChaiMenuProps) {
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([])
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-    const [selectedItem, setSelectedItem] = useState(null)
+    const [error, setError] = useState<string | null>(null)
+    const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
     const [activeSection, setActiveSection] = useState("appetizers")
 
     const fontFamily = props.font?.fontFamily || "cursive"
@@ -581,7 +658,7 @@ export default function DenChaiMenu(props) {
                 const response = await fetch(MENU_API_URL)
                 if (!response.ok) throw new Error(`HTTP ${response.status}`)
                 const data = await response.json()
-                const items = (data.items || []).map((item) => ({
+                const items = (data.items || []).map((item: any) => ({
                     name: item.Title || item.name || "",
                     price: item.Price || item.price || "",
                     category: item.Category || item.category || "",
@@ -590,7 +667,7 @@ export default function DenChaiMenu(props) {
                 setMenuItems(items)
                 setError(null)
             } catch (err) {
-                setError(err.message)
+                setError(err instanceof Error ? err.message : "Unknown error")
             } finally {
                 setLoading(false)
             }
@@ -601,7 +678,7 @@ export default function DenChaiMenu(props) {
     const scrollToSection = useCallback((categoryId: string) => {
         const element = document.getElementById(`section-${categoryId}`)
         if (element) {
-            const navHeight = 80
+            const navHeight = 100
             const elementPosition =
                 element.getBoundingClientRect().top + window.pageYOffset
             const offsetPosition = elementPosition - navHeight - 20
@@ -693,7 +770,7 @@ export default function DenChaiMenu(props) {
                 <HeroSection
                     logo={props.logo}
                     logoScale={props.logoScale || 1}
-                    showHeroText={props.showHeroText}
+                    showHeroText={props.showHeroText || false}
                     logoSpacingTop={props.logoSpacingTop || 80}
                     logoSpacingBottom={props.logoSpacingBottom || 50}
                     heroTitleSize={props.heroTitleSize || 96}
@@ -833,11 +910,3 @@ addPropertyControls(DenChaiMenu, {
         displayStepper: true,
     },
 })
-<<<<<<< HEAD
-test
-=======
-
-// Updated by thing-a-ma-bobber at 02/09/2026 20:11:12
->>>>>>> origin/main
-
-// Manual Test 2: Remote Sync check
