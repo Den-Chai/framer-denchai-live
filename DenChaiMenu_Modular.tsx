@@ -317,7 +317,7 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean; size: number; top: number; ri
             <motion.button
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
-                    position: "fixed",
+                    position: "absolute",
                     top: `${top}px`,
                     right: `${right}px`,
                     zIndex: 200,
@@ -449,7 +449,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     }
 
     return (
-        <>
+        <div style={{ position: "relative" }}>
             <motion.nav
                 initial={{ y: isCanvas ? 0 : -100, opacity: 1 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -498,7 +498,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                 right={hamburgerRight}
                 panelWidth={menuPanelWidth}
             />
-        </>
+        </div>
     )
 }
 // MENU SECTION COMPONENT
