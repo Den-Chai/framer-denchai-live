@@ -36,7 +36,7 @@ interface HeroSectionProps {
 interface NavigationBarProps {
     activeSection: string
     onCategoryClick: (categoryId: string) => void
-    isCanvas: boolean
+    isCanvas: boolean    navFontSize: number    navPadding: number
 }
 
 interface MenuSectionProps {
@@ -71,7 +71,7 @@ interface DenChaiMenuProps {
     itemTitleSize?: number
     itemDescSize?: number
     contentWidth?: number
-    boxPadding?: number
+    boxPadding?: number    navFontSize?: number    navPadding?: number
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -283,7 +283,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 const NavigationBar: React.FC<NavigationBarProps> = ({
     activeSection,
     onCategoryClick,
-    isCanvas,
+    isCanvas,    navFontSize,    navPadding,
 }) => {
     const styles = {
         nav: {
@@ -328,10 +328,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                                 color: isActive
                                     ? colors.white
                                     : "rgba(255,255,255,0.7)",
-                                fontSize: "18px",
+                                $120px",
                                 fontWeight: "600",
                                 cursor: "pointer",
-                                padding: "14px 24px",
+                                padding: "${navPadding}px ${navPadding * 1.5}px",
                                 minHeight: "48px",
                                 minWidth: "fit-content",
                                 borderRadius: "8px",
@@ -370,8 +370,7 @@ const MenuSection: React.FC<MenuSectionProps> = React.memo(
     }) => {
         const ref = useRef(null)
         const isInView = useInView(ref, {
-            once: true,
-            amount: "some",
+            once: false,            amount: 0.3,
             margin: "-100px",
         })
 
@@ -579,7 +578,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
                         style={{
                             color: colors.chocolate,
                             marginBottom: "10px",
-                            fontSize: "28px",
+                            $120px",
                         }}
                     >
                         {item.name}
@@ -612,12 +611,12 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
                         onClick={onClose}
                         style={{
                             marginTop: "30px",
-                            padding: "14px 40px",
+                            padding: "${navPadding}px ${navPadding * 1.5}px",
                             backgroundColor: colors.terracotta,
                             color: colors.white,
                             border: "none",
                             borderRadius: "8px",
-                            fontSize: "16px",
+                            $120px",
                             fontWeight: "bold",
                             cursor: "pointer",
                         }}
@@ -676,7 +675,7 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
     }, [isCanvas])
 
     const scrollToSection = useCallback((categoryId: string) => {
-        const element = document.getElementById(`section-${categoryId}`)
+        setActiveSection(categoryId)        const element = document.getElementById(`section-${categoryId}`)
         if (element) {
             const navHeight = 100
             const elementPosition =
@@ -699,7 +698,7 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
         content: {
             maxWidth: `${props.contentWidth || 900}px`,
             margin: "0 auto",
-            padding: "40px 30px",
+            padding: "${navPadding}px ${navPadding * 1.5}px",
         },
     }
 
@@ -764,7 +763,7 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
                 <NavigationBar
                     activeSection={activeSection}
                     onCategoryClick={scrollToSection}
-                    isCanvas={isCanvas}
+                    isCanvas={isCanvas}                    navFontSize={props.navFontSize || 20}                    navPadding={props.navPadding || 16}
                 />
 
                 <HeroSection
@@ -909,4 +908,4 @@ addPropertyControls(DenChaiMenu, {
         step: 5,
         displayStepper: true,
     },
-})
+})    navFontSize: {        type: ControlType.Number,        title: "Nav Button Font Size",        defaultValue: 20,        min: 12,        max: 32,        step: 2,        displayStepper: true,    },    navPadding: {        type: ControlType.Number,        title: "Nav Button Padding",        defaultValue: 16,        min: 8,        max: 32,        step: 2,        displayStepper: true,    },})
