@@ -2,6 +2,7 @@ import * as React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { addPropertyControls, ControlType, RenderTarget } from "framer"
 import { motion, useInView, AnimatePresence } from "framer-motion"
+import { Menu, X, Home, Info, UtensilsCrossed, Calendar, PartyPopper, Phone, MapPin, ShoppingBag } from "lucide-react"
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -282,6 +283,127 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 // NAVIGATION BAR COMPONENT - MOBILE FRIENDLY VERSION
 // ═══════════════════════════════════════════════════════════════════════════
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HAMBURGER MENU COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+const NAV_LINKS = [
+    { label: "Home", href: "/", icon: Home },
+    { label: "About", href: "/den-chai-about", icon: Info },
+    { label: "Menu", href: "/den-chai-menu", icon: UtensilsCrossed },
+    { label: "Reservations", href: "/den-chai-reservations", icon: Calendar },
+    { label: "Private Events", href: "/den-chai-reservations", icon: PartyPopper },
+    { label: "Contact", href: "#contact", icon: Phone },
+    { label: "Map & Hours", href: "https://maps.app.goo.gl/F4hJKI9xSi62PgpHk", icon: MapPin },
+    { label: "My Order", href: "#order", icon: ShoppingBag },
+]
+
+const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
+    const [isOpen, setIsOpen] = React.useState(false)
+
+    return (
+        <>
+            <motion.button
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                    position: "fixed",
+                    top: "35px",
+                    right: "20px",
+                    zIndex: 200,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "10px",
+                }}
+                whileTap={{ scale: 0.9 }}
+            >
+                {isOpen ? (
+                    <X size={32} color={colors.white} strokeWidth={2.5} />
+                ) : (
+                    <Menu size={32} color={colors.white} strokeWidth={2.5} />
+                )}
+            </motion.button>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            style={{
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: "rgba(0,0,0,0.5)",
+                                zIndex: 150,
+                            }}
+                            onClick={() => setIsOpen(false)}
+                        />
+                        <motion.div
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            style={{
+                                position: "fixed",
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                width: "min(400px, 80vw)",
+                                backgroundColor: colors.chocolate,
+                                zIndex: 160,
+                                padding: "100px 40px 40px",
+                                overflowY: "auto",
+                                boxShadow: "-10px 0 40px rgba(0,0,0,0.3)",
+                            }}
+                        >
+                            {NAV_LINKS.map((link, idx) => {
+                                const IconComponent = link.icon
+                                return (
+                                    <motion.a
+                                        key={link.label}
+                                        href={isCanvas ? undefined : link.href}
+                                        initial={{ opacity: 0, x: 50 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: idx * 0.05 }}
+                                        onClick={() => !isCanvas && setIsOpen(false)}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "20px",
+                                            padding: "20px",
+                                            marginBottom: "10px",
+                                            color: colors.white,
+                                            textDecoration: "none",
+                                            fontSize: "20px",
+                                            fontWeight: "600",
+                                            borderRadius: "12px",
+                                            transition: "all 0.2s",
+                                            cursor: "pointer",
+                                        }}
+                                        whileHover={{
+                                            backgroundColor: colors.terracotta,
+                                            x: 10,
+                                        }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        <IconComponent size={24} />
+                                        <span>{link.label}</span>
+                                    </motion.a>
+                                )
+                            })}
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+        </>
+    )
+}
+
 const NavigationBar: React.FC<NavigationBarProps> = ({
     activeSection,
     onCategoryClick,
@@ -289,6 +411,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     navFontSize,
     navPadding,
 }) => {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+
     const styles = {
         nav: {
             position: "sticky" as const,
@@ -318,6 +442,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
             style={styles.nav}
         >
             <div style={styles.navInner}>
+                <motion.div
+                    animate={{ x: isMenuOpen ? -300 : 0 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                    style={{ display: "contents" }}
+                >
                 {CATEGORIES.map((cat) => {
                     const isActive = activeSection === cat.id
                     return (
@@ -354,6 +483,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         </motion.nav>
     )
 }
+            <HamburgerMenu isCanvas={isCanvas} />
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MENU SECTION COMPONENT
