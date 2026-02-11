@@ -401,7 +401,7 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean; size: number; top: number; ri
                                         }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        <IconComponent size={32} />
+                                        <IconComponent size={40} />
                                         <span>{link.label}</span>
                                     </motion.a>
                                 )
