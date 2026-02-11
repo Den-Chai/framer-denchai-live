@@ -384,14 +384,14 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean; size: number; top: number; ri
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
-                                            gap: "24px",
-                                            padding: "24px 20px",
-                                            marginBottom: "10px",
+                                            gap: "28px",
+                                            padding: "32px 24px",
+                                            marginBottom: "12px",
                                             color: colors.white,
                                             textDecoration: "none",
-                                            fontSize: "28px",
+                                            fontSize: "36px",
                                             fontWeight: "600",
-                                            borderRadius: "12px",
+                                            borderRadius: "16px",
                                             transition: "all 0.2s",
                                             cursor: "pointer",
                                         }}
@@ -401,7 +401,7 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean; size: number; top: number; ri
                                         }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        <IconComponent size={40} />
+                                        <IconComponent size={52} />
                                         <span>{link.label}</span>
                                     </motion.a>
                                 )
@@ -439,7 +439,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         navInner: {
             maxWidth: "1200px",
             margin: "0 auto",
-            padding: "0 20px",
+            padding: "0 90px 0 20px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -700,10 +700,12 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
         },
         modalContent: {
             backgroundColor: colors.white,
-            borderRadius: "16px",
-            padding: "40px",
-            maxWidth: "500px",
+            borderRadius: "20px",
+            padding: "50px 40px",
+            maxWidth: "90vw",
             width: "100%",
+            maxHeight: "80vh",
+            overflowY: "auto",
         },
     }
 
@@ -727,18 +729,19 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
                     <h2
                         style={{
                             color: colors.chocolate,
-                            marginBottom: "10px",
-                            fontSize: "28px",
+                            marginBottom: "16px",
+                            fontSize: "44px",
+                            lineHeight: "1.2",
                         }}
                     >
                         {item.name}
                     </h2>
                     <p
                         style={{
-                            fontSize: "24px",
+                            fontSize: "36px",
                             color: colors.terracotta,
                             fontWeight: "bold",
-                            marginBottom: "20px",
+                            marginBottom: "24px",
                         }}
                     >
                         {item.price}
@@ -747,7 +750,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
                         style={{
                             color: "#666",
                             lineHeight: "1.6",
-                            fontSize: "16px",
+                            fontSize: "24px",
                         }}
                     >
                         {item.description}
@@ -760,15 +763,16 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
                         whileTap={{ scale: 0.95 }}
                         onClick={onClose}
                         style={{
-                            marginTop: "30px",
-                            padding: "14px 40px",
+                            marginTop: "40px",
+                            padding: "20px 60px",
                             backgroundColor: colors.terracotta,
                             color: colors.white,
                             border: "none",
-                            borderRadius: "8px",
-                            fontSize: "16px",
+                            borderRadius: "12px",
+                            fontSize: "24px",
                             fontWeight: "bold",
                             cursor: "pointer",
+                            minHeight: "64px",
                         }}
                     >
                         Close
@@ -1068,7 +1072,7 @@ addPropertyControls(DenChaiMenu, {
     hamburgerSize: {
         type: ControlType.Number,
         title: "Hamburger Icon Size",
-        defaultValue: 40,
+        defaultValue: 64,
         min: 24,
         max: 80,
         step: 4,
