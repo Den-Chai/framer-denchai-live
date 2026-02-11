@@ -479,13 +479,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                         </motion.button>
                     )
                 })}
+                </motion.div>
             </div>
         </motion.nav>
+            <HamburgerMenu isCanvas={isCanvas} />
+        </>
     )
 }
-            <HamburgerMenu isCanvas={isCanvas} />
-
-// ═══════════════════════════════════════════════════════════════════════════
 // MENU SECTION COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
