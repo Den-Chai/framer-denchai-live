@@ -40,6 +40,10 @@ interface NavigationBarProps {
     isCanvas: boolean
     navFontSize: number
     navPadding: number
+    hamburgerSize: number
+    hamburgerTop: number
+    hamburgerRight: number
+    menuPanelWidth: number
 }
 
 interface MenuSectionProps {
@@ -75,6 +79,12 @@ interface DenChaiMenuProps {
     itemDescSize?: number
     contentWidth?: number
     boxPadding?: number
+    navFontSize?: number
+    navPadding?: number
+    hamburgerSize?: number
+    hamburgerTop?: number
+    hamburgerRight?: number
+    menuPanelWidth?: number
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -299,7 +309,7 @@ const NAV_LINKS = [
     { label: "My Order", href: "#order", icon: ShoppingBag },
 ]
 
-const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
+const HamburgerMenu: React.FC<{ isCanvas: boolean; size: number; top: number; right: number; panelWidth: number }> = ({ isCanvas, size, top, right, panelWidth }) => {
     const [isOpen, setIsOpen] = React.useState(false)
 
     return (
@@ -308,8 +318,8 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
                     position: "fixed",
-                    top: "35px",
-                    right: "20px",
+                    top: `${top}px`,
+                    right: `${right}px`,
                     zIndex: 200,
                     background: "transparent",
                     border: "none",
@@ -319,9 +329,9 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
                 whileTap={{ scale: 0.9 }}
             >
                 {isOpen ? (
-                    <X size={32} color={colors.white} strokeWidth={2.5} />
+                    <X size={size} color={colors.white} strokeWidth={2.5} />
                 ) : (
-                    <Menu size={32} color={colors.white} strokeWidth={2.5} />
+                    <Menu size={size} color={colors.white} strokeWidth={2.5} />
                 )}
             </motion.button>
 
@@ -353,7 +363,7 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
                                 top: 0,
                                 right: 0,
                                 bottom: 0,
-                                width: "min(400px, 80vw)",
+                                width: `min(${panelWidth}px, 80vw)`,
                                 backgroundColor: colors.chocolate,
                                 zIndex: 160,
                                 padding: "100px 40px 40px",
@@ -374,12 +384,12 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
-                                            gap: "20px",
-                                            padding: "20px",
+                                            gap: "24px",
+                                            padding: "24px 20px",
                                             marginBottom: "10px",
                                             color: colors.white,
                                             textDecoration: "none",
-                                            fontSize: "20px",
+                                            fontSize: "28px",
                                             fontWeight: "600",
                                             borderRadius: "12px",
                                             transition: "all 0.2s",
@@ -391,7 +401,7 @@ const HamburgerMenu: React.FC<{ isCanvas: boolean }> = ({ isCanvas }) => {
                                         }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        <IconComponent size={24} />
+                                        <IconComponent size={32} />
                                         <span>{link.label}</span>
                                     </motion.a>
                                 )
@@ -410,6 +420,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     isCanvas,
     navFontSize,
     navPadding,
+    hamburgerSize,
+    hamburgerTop,
+    hamburgerRight,
+    menuPanelWidth,
 }) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
@@ -435,54 +449,55 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     }
 
     return (
-        <motion.nav
-            initial={{ y: isCanvas ? 0 : -100, opacity: 1 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, type: "spring" }}
-            style={styles.nav}
-        >
-            <div style={styles.navInner}>
-                <motion.div
-                    animate={{ x: isMenuOpen ? -300 : 0 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                    style={{ display: "contents" }}
-                >
-                {CATEGORIES.map((cat) => {
-                    const isActive = activeSection === cat.id
-                    return (
-                        <motion.button
-                            key={cat.id}
-                            onClick={() => onCategoryClick(cat.id)}
-                            style={{
-                                background: isActive
-                                    ? colors.terracotta
-                                    : "transparent",
-                                border: "none",
-                                color: isActive
-                                    ? colors.white
-                                    : "rgba(255,255,255,0.7)",
-                                fontSize: `${navFontSize}px`,
-                                fontWeight: "600",
-                                cursor: "pointer",
-                                padding: `${navPadding}px ${navPadding * 1.5}px`,
-                                minHeight: "48px",
-                                minWidth: "fit-content",
-                                borderRadius: "8px",
-                                transition: "all 0.2s",
-                                fontFamily: "sans-serif",
-                                textTransform: "uppercase" as const,
-                            }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            {cat.label}
-                        </motion.button>
-                    )
-                })}
-                </motion.div>
-            </div>
-        </motion.nav>
-            <HamburgerMenu isCanvas={isCanvas} />
+        <>
+            <motion.nav
+                initial={{ y: isCanvas ? 0 : -100, opacity: 1 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, type: "spring" }}
+                style={styles.nav}
+            >
+                <div style={styles.navInner}>
+                    {CATEGORIES.map((cat) => {
+                        const isActive = activeSection === cat.id
+                        return (
+                            <motion.button
+                                key={cat.id}
+                                onClick={() => onCategoryClick(cat.id)}
+                                style={{
+                                    background: isActive
+                                        ? colors.terracotta
+                                        : "transparent",
+                                    border: "none",
+                                    color: isActive
+                                        ? colors.white
+                                        : "rgba(255,255,255,0.7)",
+                                    fontSize: `${navFontSize}px`,
+                                    fontWeight: "600",
+                                    cursor: "pointer",
+                                    padding: `${navPadding}px ${navPadding * 1.5}px`,
+                                    minHeight: "48px",
+                                    minWidth: "fit-content",
+                                    borderRadius: "8px",
+                                    transition: "all 0.2s",
+                                    fontFamily: "sans-serif",
+                                    textTransform: "uppercase" as const,
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                {cat.label}
+                            </motion.button>
+                        )
+                    })}
+                </div>
+            </motion.nav>
+            <HamburgerMenu
+                isCanvas={isCanvas}
+                size={hamburgerSize}
+                top={hamburgerTop}
+                right={hamburgerRight}
+                panelWidth={menuPanelWidth}
+            />
         </>
     )
 }
@@ -550,7 +565,7 @@ const MenuSection: React.FC<MenuSectionProps> = React.memo(
             item: {
                 marginBottom: "25px",
                 cursor: "pointer",
-                padding: "20px",
+                padding: "24px 20px",
                 borderRadius: "10px",
                 transition: "all 0.2s",
             },
@@ -681,7 +696,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ item, onClose, isCanvas }) => {
             alignItems: "center",
             justifyContent: "center",
             zIndex: 1000,
-            padding: "20px",
+            padding: "24px 20px",
         },
         modalContent: {
             backgroundColor: colors.white,
@@ -900,8 +915,12 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
                     activeSection={activeSection}
                     onCategoryClick={scrollToSection}
                     isCanvas={isCanvas}
-                navFontSize={props.navFontSize || 20}
+                    navFontSize={props.navFontSize || 20}
                     navPadding={props.navPadding || 16}
+                    hamburgerSize={props.hamburgerSize || 40}
+                    hamburgerTop={props.hamburgerTop || 35}
+                    hamburgerRight={props.hamburgerRight || 20}
+                    menuPanelWidth={props.menuPanelWidth || 400}
                 />
 
                 <HeroSection
@@ -914,8 +933,6 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
                     heroSubtitleSize={props.heroSubtitleSize || 28}
                     fontFamily={fontFamily}
                     isCanvas={isCanvas}
-                navFontSize={props.navFontSize || 20}
-                    navPadding={props.navPadding || 16}
                 />
 
                 <div style={styles.content}>
@@ -932,9 +949,7 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
                             itemTitleSize={props.itemTitleSize || 24}
                             itemDescSize={props.itemDescSize || 20}
                             boxPadding={props.boxPadding || 40}
-                        navFontSize={props.navFontSize || 20}
-                    navPadding={props.navPadding || 16}
-                />
+                        />
                     ))}
                 </div>
             </div>
@@ -943,9 +958,7 @@ export default function DenChaiMenu(props: DenChaiMenuProps) {
                 item={selectedItem}
                 onClose={() => setSelectedItem(null)}
                 isCanvas={isCanvas}
-            navFontSize={props.navFontSize || 20}
-                    navPadding={props.navPadding || 16}
-                />
+            />
         </>
     )
 }
@@ -1050,6 +1063,42 @@ addPropertyControls(DenChaiMenu, {
         min: 8,
         max: 32,
         step: 2,
+        displayStepper: true,
+    },
+    hamburgerSize: {
+        type: ControlType.Number,
+        title: "Hamburger Icon Size",
+        defaultValue: 40,
+        min: 24,
+        max: 80,
+        step: 4,
+        displayStepper: true,
+    },
+    hamburgerTop: {
+        type: ControlType.Number,
+        title: "Hamburger Top Position",
+        defaultValue: 35,
+        min: 10,
+        max: 100,
+        step: 5,
+        displayStepper: true,
+    },
+    hamburgerRight: {
+        type: ControlType.Number,
+        title: "Hamburger Right Position",
+        defaultValue: 20,
+        min: 10,
+        max: 100,
+        step: 5,
+        displayStepper: true,
+    },
+    menuPanelWidth: {
+        type: ControlType.Number,
+        title: "Menu Panel Width",
+        defaultValue: 400,
+        min: 250,
+        max: 600,
+        step: 25,
         displayStepper: true,
     },
     contentWidth: {
